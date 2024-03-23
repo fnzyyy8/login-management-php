@@ -24,7 +24,6 @@ class UserServiceTest extends TestCase
     {
         $connection = Database::getConnection();
         $this->userRepository = new UserRepository($connection);
-
         $sessionRepository = new SessionRepository($connection);
 
         $this->userService = new UserService($this->userRepository);

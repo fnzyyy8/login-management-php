@@ -30,7 +30,7 @@ class UserController
     }
 
 
-    public function register()
+    public function register() : void
     {
         View::render('User/register',[
             'title' => "User Register"
@@ -38,7 +38,7 @@ class UserController
 
     }
 
-    public function postRegister()
+    public function postRegister() : void
     {
         $request = new UserRegisterRequest();
         $request->id = $_POST['id'];
@@ -59,7 +59,7 @@ class UserController
         
     }
 
-    public function login()
+    public function login() : void
     {
         View::render('User/login',[
             'title'=>"User login"
@@ -67,7 +67,7 @@ class UserController
         
     }
 
-    public function postLogin()
+    public function postLogin() : void
     {
         $request = new UserLoginRequest();
         $request->id = $_POST['id'];
@@ -76,24 +76,28 @@ class UserController
         try {
             $response = $this->userService->login($request);
             $this->sessionService->create($response->user->id);
+
+
             View::redirect('/');
 
         }catch (ValidationException $exception){
+
             View::render('User/login',[
                 'title'=>"User login",
                 'error'=>$exception->getMessage()
             ]);
+
         }
         
     }
 
-    public function logout()
+    public function logout() : void
     {
         $this->sessionService->destroy();
         View::redirect('/');
     }
 
-    public function profile()
+    public function profile() : void
     {
         $user = $this->sessionService->current();
         View::render("User/profile",[
@@ -106,7 +110,7 @@ class UserController
         
     }
 
-    public function postProfile()
+    public function postProfile() : void
     {
         $user = $this->sessionService->current();
         $request = new UpdateProfileRequest();
@@ -127,7 +131,7 @@ class UserController
         }
     }
 
-    public function updatePassword()
+    public function updatePassword() :void
     {
         $user = $this->sessionService->current();
         View::render("User/password",[
@@ -138,7 +142,7 @@ class UserController
         ]);
     }
 
-    public function postUpdatePassword()
+    public function postUpdatePassword() : void
     {
         $user = $this->sessionService->current();
         $request = new UpdatePasswordRequest();

@@ -33,13 +33,12 @@ class SessionService
         
     }
 
-    public function destroy()
+    public function destroy() : void
     {
         $sessionId = $_COOKIE[self::$COOKIE_NAME ?? ''];
         $this->sessionRepository->deleteById($sessionId);
         setcookie(self::$COOKIE_NAME,'',1,"/");
 
-        
     }
 
     public function current() : ?User

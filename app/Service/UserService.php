@@ -6,6 +6,7 @@ use Exception;
 use Rrim\PhpUserManagement\Config\Database;
 use Rrim\PhpUserManagement\Domain\User;
 use Rrim\PhpUserManagement\Exception\ValidationException;
+use Rrim\PhpUserManagement\Log\Log;
 use Rrim\PhpUserManagement\Model\UpdatePasswordRequest;
 use Rrim\PhpUserManagement\Model\UpdatePasswordResponse;
 use Rrim\PhpUserManagement\Model\UpdateProfileRequest;
@@ -27,9 +28,6 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    /**
-     * @throws ValidationException
-     */
     public function register(UserRegisterRequest $request) : UserRegisterResponse
     {
         $validator = new Validation("id, name, and password");
@@ -54,11 +52,10 @@ class UserService
                 Database::commitTransaction();
                 return $response;
             }
-
         } catch (Exception $exception){
-
             Database::rollbackTransaction();
             throw $exception;
+
         }
 
 
@@ -96,7 +93,7 @@ class UserService
     public function updateProfile(UpdateProfileRequest $request):UpdateProfileResponse
     {
         $validation = new Validation("Name");
-        $validation->updateValidation($request);
+        $validation->updateProfileValidation($request);
 
         try {
             Database::beginTransaction();
@@ -125,7 +122,7 @@ class UserService
     public function updatePassword(UpdatePasswordRequest $request) : UpdatePasswordResponse
     {
         $validation = new Validation("Password");
-        $validation->passwordValidation($request);
+        $validation->updatePasswordValidation($request);
 
         try {
             Database::beginTransaction();

@@ -2,72 +2,56 @@
 
 namespace Rrim\PhpUserManagement\Validation;
 
+use Rrim\PhpUserManagement\Domain\User;
 use Rrim\PhpUserManagement\Exception\ValidationException;
 use Rrim\PhpUserManagement\Model\UpdatePasswordRequest;
 use Rrim\PhpUserManagement\Model\UpdateProfileRequest;
 use Rrim\PhpUserManagement\Model\UserLoginRequest;
 use Rrim\PhpUserManagement\Model\UserRegisterRequest;
 
+
 class Validation
 {
+    private User $user;
 
-    private string $message;
-
-
-    public function __construct(string $message)
+    public function __construct(public string $message)
     {
-        $this->message = $message;
-    }
-
-
-    /**
-     * @throws ValidationException
-     */
-    public function registerValidation(UserRegisterRequest $request): void
-    {
-        $this->isBlank($request->id);
-        $this->isBlank($request->name);
-        $this->isBlank($request->password);
-
 
     }
 
-    /**
-     * @throws ValidationException
-     */
-    public function loginValidation(UserLoginRequest $request): void
+    private function blank($request): void
     {
-        $this->isBlank($request->id);
-        $this->isBlank($request->password);
-
-    }
-
-    /**
-     * @throws ValidationException
-     */
-    public function updateValidation(UpdateProfileRequest $request):void
-    {
-        $this->isBlank($request->id);
-        $this->isBlank($request->name);
-
-    }
-
-    public function passwordValidation(UpdatePasswordRequest $request):void
-    {
-        $this->isBlank($request->id);
-        $this->isBlank($request->oldPassword);
-        $this->isBlank($request->newPassword);
-
-    }
-
-    /**
-     * @throws ValidationException
-     */
-    private function isBlank($value): void
-    {
-        if ($value == null || trim($value) == ""){
+        if ($request == null || trim($request) == "") {
             throw new ValidationException("$this->message can't blank");
         }
+
+    }
+
+    public function registerValidation(UserRegisterRequest $request): void
+    {
+        $this->blank($request->id);
+        $this->blank($request->name);
+        $this->blank($request->password);
+
+    }
+
+    public function loginValidation(UserLoginRequest $request): void
+    {
+        $this->blank($request->id);
+        $this->blank($request->password);
+    }
+
+    public function updateProfileValidation(UpdateProfileRequest $request): void
+    {
+        $this->blank($request->id);
+        $this->blank($request->name);
+    }
+
+    public function updatePasswordValidation(UpdatePasswordRequest $request):void
+    {
+        $this->blank($request->id);
+        $this->blank($request->oldPassword);
+        $this->blank($request->newPassword);
 
     }
 
